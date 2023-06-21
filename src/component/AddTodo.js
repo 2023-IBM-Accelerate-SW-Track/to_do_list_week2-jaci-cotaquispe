@@ -2,31 +2,61 @@ import React, { Component } from "react";
 import { Button, TextField } from "@mui/material";
 
 class AddTodo extends Component {
-  // Create a local react state of the this component with a content property set to nothing.
+  // Create a local react state of the this component with both content date property set to nothing.
   constructor() {
     super();
     this.state = {
-      content: "",
+      task: "",
+      preCondition: "",
+      acceptenceCriteria: "",
+      date: ""
     };
   }
-  // The handleChange function updates the react state with the new input value provided from the user.
+  // The handleChange function updates the react state with the new input value provided from the user and the current date/time.
   // "event" is the defined action a user takes. In this case, the event is triggered when the user types something
   // into the text field.
   handleChange = (event) => {
-    this.setState({
-      content: event.target.value,
-    });
+    if(event.target.name === "task"){
+      this.setState((prevState) => {
+        return({
+          ...prevState,
+          task: event.target.value,
+          date: Date().toLocaleString('en-US')
+        });
+      });
+    }
+    if(event.target.name === "preCondition"){
+      this.setState((prevState) => {
+        return({
+          ...prevState,
+          preCondition: event.target.value,
+          date: Date().toLocaleString('en-US')
+        });
+      });
+    }
+    if(event.target.name === "acceptenceCriteria"){
+      this.setState((prevState) => {
+        return({
+          ...prevState,
+          acceptenceCriteria: event.target.value,
+          date: Date().toLocaleString('en-US')
+        });
+      });
+    }
   };
   // The handleSubmit function collects the forms input and puts it into the react state.
   // event.preventDefault() is called to prevents default event behavior like refreshing the browser.
-  // this.props.addTodo(this.state) passes the current state (or user input) into the addTodo function defined
+  // this.props.addTodo(this.state) passes the current state (or user input and current date/time) into the addTodo function defined
   // in the Home.js file which then adds the input into the list.
   handleSubmit = (event) => {
     event.preventDefault();
-    if (this.state.content.trim()) {
+    if (this.state.task.trim() && (this.state.acceptenceCriteria.trim() || this.preCondition.trim())) {
       this.props.addTodo(this.state);
       this.setState({
-        content: "",
+        task: "",
+        acceptenceCriteria: "",
+        preCondition: "",
+        date: ""
       });
     }
   };
@@ -41,10 +71,25 @@ class AddTodo extends Component {
       // 4. The value of the text field also should reflect the local state of this component.
       <div>
         <TextField
-          label="Add New Item"
+          label="Add New Task"
           variant="outlined"
           onChange={this.handleChange}
-          value={this.state.content}
+          value={this.state.task}
+          name="task"
+        />
+         <TextField
+          label="Add Pre-condition"
+          variant="outlined"
+          onChange={this.handleChange}
+          value={this.state.preCondition}
+          name="preCondition"
+        />
+          <TextField
+          label="Add acceptence criteria"
+          variant="outlined"
+          onChange={this.handleChange}
+          value={this.state.acceptenceCriteria}
+          name="acceptenceCriteria"
         />
         <Button
           style={{ marginLeft: "10px" }}
